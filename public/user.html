@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuário</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        socket.on("updateImage", (image) => {
+            document.getElementById("auction-image").src = image;
+        });
+
+        socket.on("updateBid", (data) => {
+            document.getElementById("highest-bidder").innerText = 
+                data.name ? `${data.name} - R$${data.bid}` : "Nenhum lance ainda";
+        });
+
+        function placeBid() {
+            const name = document.getElementById("username").value;
+            const bid = parseFloat(document.getElementById("bid").value);
+
+            if (!name || isNaN(bid) || bid <= 0) {
+                alert("Digite um nome e um lance válido.");
+                return;
+            }
+
+            socket.emit("newBid", { name, bid });
+        }
+
+        window.onload = () => {
+            socket.emit("requestData");
+        };
+    </script>
+</head>
+<body>
+    <h1>Leilão</h1>
+    <h2 id="highest-bidder">Nenhum lance ainda</h2>
+    <img id="auction-image" src="" alt="Imagem do Leilão" width="500">
+    <br>
+    <input type="text" id="username" placeholder="Seu nome">
+    <input type="number" id="bid" placeholder="Seu lance">
+    <button onclick="placeBid()">Dar Lance</button>
+</body>
+</html>

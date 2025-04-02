@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrador</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        function changeImage(direction) {
+            socket.emit("changeImage", direction);
+        }
+
+        socket.on("updateImage", (image) => {
+            document.getElementById("auction-image").src = image;
+        });
+
+        socket.on("updateBid", (data) => {
+            document.getElementById("highest-bidder").innerText = 
+                data.name ? `${data.name} - R$${data.bid}` : "Nenhum lance ainda";
+        });
+
+        window.onload = () => {
+            socket.emit("requestData");
+        };
+    </script>
+</head>
+<body>
+    <h1>Admin - Controle do Leilão</h1>
+    <h2 id="highest-bidder">Nenhum lance ainda</h2>
+    <img id="auction-image" src="" alt="Imagem do Leilão" width="500">
+    <br>
+    <button onclick="changeImage('prev')">⬅️ Anterior</button>
+    <button onclick="changeImage('next')">➡️ Próximo</button>
+</body>
+</html>

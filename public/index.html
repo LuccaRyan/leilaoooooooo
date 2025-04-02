@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Usuários</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.on("redirect", (url) => {
+            window.location.href = url;
+        });
+    </script>
+</head>
+<body>
+    <h1>Carregando...</h1>
+</body>
+</html>
